@@ -3,7 +3,9 @@ $wborder: 2px;
 $iconx:  "\f00d";
 $icono:  "\f10c";
 
-
+*{
+  transition: all 0.5s ease
+}
 *, *:after, *:before {
 outline: none;
   -webkit-box-sizing: border-box;
@@ -61,46 +63,52 @@ body {
 	float: left;
 	width: 33.33%;
 	height: 33.33%;	
-	transition: all 0.5s ease;	
 	color: rgba(78,52,46 ,1);	
 	font-size:600%;
 	line-height:200%;
 	text-align: center;
 	vertical-align: middle;
-		label{			
-			font-family: 'Rubik', sans-serif;
-			&.empty{
-				display:none;
-				cursor:pointer;	
-			}
+	label{			
+		font-family: 'Rubik', sans-serif;
+		&.empty{
+			display:none;
+			cursor:pointer;	
 		}
-		&:hover{
-			background:rgba(255,255,255,0.2);			
-			label.empty{			
-				display:block;				
-			}			
-		}
-		&:nth-of-type(2) {
-			border-top:0;
-			border-right:$wborder solid $cborder;
-			border-left:$wborder solid $cborder;
-		}
-		&:nth-of-type(5) {
-			border-top:$wborder solid $cborder;
-			border-bottom:$wborder solid $cborder;
-			border-right:$wborder solid $cborder;
-			border-left:$wborder solid $cborder;
-		}		
-		&:nth-of-type(8) {
-			border-top:0;
-			border-right:$wborder solid $cborder;
-			border-left:$wborder solid $cborder;
-		}
-		&:nth-of-type(4) , 
-		&:nth-of-type(6) {  
-			border-top:$wborder solid $cborder;
-			border-bottom:$wborder solid $cborder;
-		}
-
+	}
+	&:hover{
+		background:rgba(255,255,255,0.2);			
+		label.empty{			
+			display:block;				
+		}			
+	}
+	&:nth-of-type(2) {
+		border-top:0;
+		border-right:$wborder solid $cborder;
+		border-left:$wborder solid $cborder;
+	}
+	&:nth-of-type(5) {
+		border-top:$wborder solid $cborder;
+		border-bottom:$wborder solid $cborder;
+		border-right:$wborder solid $cborder;
+		border-left:$wborder solid $cborder;
+	}		
+	&:nth-of-type(8) {
+		border-top:0;
+		border-right:$wborder solid $cborder;
+		border-left:$wborder solid $cborder;
+	}
+	&:nth-of-type(4) , 
+	&:nth-of-type(6) {  
+		border-top:$wborder solid $cborder;
+		border-bottom:$wborder solid $cborder;
+	}
 }
 
+  @media only screen and (max-width: 800px) {
+   .board {
+      width: 300px;
+      height: 300px;
+      font-size: 50%;
+      line-height: 200%;      
+    }
+}

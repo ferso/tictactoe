@@ -8,14 +8,15 @@ class Box extends React.Component {
   render() {
     if( this.props.empty === 'E'){
       return (
-        <div className="box" onClick={this.props.onTurn} > 
-          <label className="empty"  data-id={this.props.id}  >{this.props.player}</label>
+        <div className="box" data-id={this.props.id} onClick={this.props.onTurn} > 
+          {this.props.id + 1 } 
+          {/*<label className="empty"  data-id={this.props.id}>{this.props.player}</label>*/}
         </div>
       );
     }else{
       return (
         <div className="box" > 
-          <label data-id={this.props.id}  >{this.props.empty}</label>
+          <label data-id={this.props.id}  >{this.props.empty} </label>
         </div>
       );
     }
@@ -81,6 +82,7 @@ class App extends React.Component {
       let b;
       let c;
       let index;
+      let options = [];
 
       let cx = x;
       let co = o;
@@ -97,27 +99,39 @@ class App extends React.Component {
           console.log('--------------------------------')
           //get all winner options
           for(let i in this.winOptions){
-              let config = this.winOptions[i];
-              
-              // validate x
+
+              let config = this.winOptions[i];              
+              // validate player options
               a = config.filter( i =>  !x.has(i));
-              b = config.filter( i =>  !o.has(i));
+              // validate IA options
+              b = config.filter( i =>  !o.has(i));              
+              //validate total board
               c = config.filter( i =>  !m.has(i));
 
-              console.log(config, c.length)
-              
-               if(  c.length !== 0 && b.length === 1  ){                  
-                  return index = b[0] - 1;
-                  console.log('IA')
-              }else{
-                if(  c.length !== 0 && a.length === 1  ){                  
-                    return index = a[0] - 1;
-                    console.log('Player')
+              if(c.length !== 0){                
+                 if(  b.length === 1  ){                  
+                      index = b[0] - 1;                      
+                      console.log('IA Pos ',index , config , c.length)
+                  }
+                if( a.length === 1  ){                  
+                      index = a[0] - 1;
                 }
-              }             
+
+                options.push(config);
+              }
+
           }         
       }
+
+       if(typeof index === 'undefined' ){
+        // console.log('index undefined')
+        for( let u in options ){
+          let config = options[u];
+          return index = config[0] - 1 ;
+        }        
+      }
       
+      return index;
   }
   onTurn(e){     
     this.boxes[e.target.dataset.id] =  this.state.player;
