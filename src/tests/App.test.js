@@ -7,8 +7,7 @@ import {shallow,mount}    from 'enzyme';
 import sinon        from 'sinon';
 
 //components
-import App       from './App';
-import TicTacToe from './TicTacToe';
+import App       from '../App';
 
 describe("Testing Application", ()=> {
 
@@ -17,15 +16,16 @@ describe("Testing Application", ()=> {
         ReactDOM.render(<App />, div);
   });
 
-  it('should render <TicTacToe /> component', () => {   
+  it('should render <App /> component', () => {   
         const div = document.createElement('div');
-        ReactDOM.render(<TicTacToe />, div);
+        ReactDOM.render(<App />, div);
   });
 
-  it('should  <TicTacToe /> render board', () => {   
-      sinon.spy(TicTacToe.prototype, 'componentDidMount');
-      var w = mount(<TicTacToe />);
-      expect(TicTacToe.prototype.componentDidMount.calledOnce).toEqual(true);
+  it('should  <App /> render board', () => {   
+      sinon.spy(App.prototype, 'IA');
+      var w = mount(<App />);
+      console.log( App.prototype.IA )
+      //expect(App.prototype.componentDidUpdate.calledOnce).toEqual(true);
 
   });
 
