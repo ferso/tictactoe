@@ -1,75 +1,14 @@
+/* Copyright (C) Fernando Soto, Inc - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ * Written by @ferso <erickfernando@gmail.com>, April 10 2017
+ */
+
+/*eslint no-loop-func: "off"*/
+
 import React from 'react';
-import _ from 'lodash';
-
-class Message extends React.Component {
-  render(){
-    if(this.props.game){
-      return (
-        <div className="footer">
-          <div ref="warnings" className="warnings">{this.props.warnings}</div>
-          <div className="movements">Move {this.props.moves} </div>
-          <a href="#" onClick={this.props.restart} > RESTART </a>
-        </div>
-      )
-    }else{
-      return (
-        <div className="footer">
-          <div ref="warnings" className="warnings warnings-draw">{this.props.warnings} </div>
-          <div className="movements">Total movements: {this.props.moves} </div>
-          <a href="#" onClick={this.props.restart} > NEW GAME </a>
-        </div>
-      )
-    }
-  }
-}
-
-class Box extends React.Component {
-  render() {
-      // we defined box style class
-      let classBox = 'box';
-      if( this.props.loader ){
-          classBox += ' box-wait'
-      }
-       if( !this.props.game  ){    
-        classBox += ' box-off'
-       }
-      if( !this.props.game && this.props.row ){    
-          classBox += ' box-off'      
-          if( this.props.row.indexOf(this.props.id+1) > -1 ){            
-            classBox += ' box-winner'
-          }
-      }
-      if( this.props.empty === 'E'){
-        return (
-          <div className={classBox} data-id={this.props.id} onClick={this.props.onTurn} ></div>
-        );
-      }else{
-        return (
-          <div className={ classBox } > 
-            <label data-id={this.props.id}  >{this.props.empty} </label>
-          </div>
-        );
-      }
-    }  
-}
-
-class Board extends React.Component {
-  render() {    
-  var Boxes = [];
-   this.props.boxes.forEach((e,i) => {       
-        Boxes.push(<Box key={i} id={i} {...this.props} empty={e} />)
-    })
-    return (
-      <div>
-        <h2>TIC TAC TOE BOARD</h2>
-        <div className="board">
-            {Boxes}  
-        </div>
-          <Message {...this.props} />
-      </div>
-    );
-  }
-}
+import _     from 'lodash';
+import Board from './components/Board';
 
 class App extends React.Component {
   constructor(props,context){
@@ -91,16 +30,14 @@ class App extends React.Component {
         boxes   :Array(9).fill('E'),
         warnings:'PLAYER START',
     }
-  }
-  componentDidMount(){
-    //this.AI();
-  }
+  }  
   componentDidUpdate(props,state){
-    if( this.state.player !== state.player && this.state.player === 'O' ){      
+    
+    if( this.state.player !== state.player && this.state.player === 'O' ){
       if(this.state.moves === 9 ){
         this.setState({ warnings:'DRAW!', game:false})
       }else{
-        this.setState({loader:true, warnings:'COMPUTER TURN'})
+        this.setState({ loader:true})
         this.AI();
       }
     }
@@ -110,8 +47,8 @@ class App extends React.Component {
       this.checkWinner();      
     }
   }
-  AI(){ 
-    
+  resolvePositions(){
+
     let x = [];
     let o = [];
     let e = [];
@@ -121,31 +58,36 @@ class App extends React.Component {
     this.state.boxes.forEach((v,i) => { if( v === 'O') { o.push(i+1) } });
     this.state.boxes.forEach((v,i) => { if( v === 'E') { e.push(i+1) } });
     this.state.boxes.forEach((v,i) => { if( v !== 'E') { m.push(i+1) } });
-
+    return {x,o,e,m};
+  }
+  AI(){ 
+    
+   // define statuses 
+   const {x,o,m} = this.resolvePositions();
+   
     //set index
     let index = this.findMove(x,m,o);
 
     //the AI turn, set index action to board 
     setTimeout( ()=>{
        this.setTurn(index,'O');
-    },500)    
+    },700)    
   }
   onTurn(e){
     if(this.state.player === 'X'){
       this.setTurn(e.target.dataset.id,'X');
     }
   }
-  setTurn(index,turn){
+  setTurn(index){
     if(this.state.game){
-      this.state.boxes[index] = turn;
       let boxes = this.state.boxes;
-          boxes[index] = turn;      
+          boxes[index] = this.state.player;      
       this.setState({
         player   : this.state.player === 'O' ? 'X' : 'O',
         moves    : this.state.moves + 1,
         boxes    : boxes,
         loader   : false,
-        warnings :'YOUR TURN'
+        warnings : this.state.player === 'O' ? 'YOUR TURN' : 'COMPUTER TURN'
       });
     }    
   }
@@ -162,7 +104,7 @@ class App extends React.Component {
        o = new Set(o);
        m = new Set(m);
 
-      if(this.state.moves <= 1 ){
+      if(this.state.moves === 1 ){
          //var rand = Math.floor(Math.random() * 8) + 1            
          index = this.state.boxes[4] === 'E' ? 4 : 0;
       }else{          
@@ -207,22 +149,14 @@ class App extends React.Component {
       let c;
       let d;
       let config;
-      let x = [];
-      let o = [];
-      let e = [];
-      let m = [];
-
-      // definig current board slots
-      this.state.boxes.forEach((v,i) => { if( v === 'X') { x.push(i+1) } });
-      this.state.boxes.forEach((v,i) => { if( v === 'O') { o.push(i+1) } });
-      this.state.boxes.forEach((v,i) => { if( v === 'E') { e.push(i+1) } });
-      this.state.boxes.forEach((v,i) => { if( v !== 'E') { m.push(i+1) } });
+    
+      // define statuses 
+      let {x,o} = this.resolvePositions();
 
       // transform to object references
       x = new Set(x);      
       o = new Set(o);
-      m = new Set(m);
-
+    
       for(let i in this.winOptions){
 
         // current win option row

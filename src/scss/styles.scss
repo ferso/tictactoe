@@ -109,7 +109,7 @@ body {
 	vertical-align: middle;
 	cursor:pointer;	
 	&-wait{
-		cursor: wait;
+		cursor: auto;
 		background:none;
 		&:hover{
 			background:none !important;
