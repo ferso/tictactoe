@@ -6,7 +6,8 @@ class Message extends React.Component {
     if(this.props.game){
       return (
         <div className="footer">
-          <div ref="warnings" className="warnings">{this.props.warnings}</div>
+          <div ref="warnings" className="warnings">{this.props.warnings} 
+            <span className={this.props.warnings === 'COMPUTER TURN' ? 'spinner':''}></span></div>
           <div className="movements">Move {this.props.moves} </div>
           <a href="#" onClick={this.props.restart} > RESTART </a>
         </div>

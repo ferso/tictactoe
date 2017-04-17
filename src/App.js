@@ -71,7 +71,7 @@ class App extends React.Component {
     //the AI turn, set index action to board 
     setTimeout( ()=>{
        this.setTurn(index,'O');
-    },700)    
+    },600)    
   }
   onTurn(e){
     if(this.state.player === 'X'){

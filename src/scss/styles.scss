@@ -77,7 +77,8 @@ body {
 		font-family: 'Rubik', sans-serif;
 		color:rgba(216,67,21 ,1)
 	}
-	.warnings{	
+	.warnings{
+	position: relative;
 	font-size: 40px;
 	text-align: center;
 	font-weight: 600;
@@ -182,3 +183,40 @@ body {
 		width: 300px;
 	}
 }
+
+@keyframes spinner {
+  to {transform: rotate(360deg);}
+}
+
+
+ 
+.spinner:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 15px;  
+  width: 30px;
+  height: 30px;
+  margin-left:15px;
+  border-radius: 50%;
+  border: 2px solid rgba(13,71,161 ,1);
+  border-top-color: #ccc;
+  animation: spinner .6s linear infinite;
+}
+
+.spinner-5:before {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 15px;    
+    width: 30px;
+    height: 30px;
+    margin-left:15px;
+    border-radius: 50%;
+    border: 2px solid #f6f;
+    border-top-color: #0e0;
+    border-right-color: #0dd;
+    border-bottom-color: #f90;
+    animation: spinner .6s linear infinite;
+}
+
