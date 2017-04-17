@@ -2,7 +2,7 @@ Tic Tac Toe Challenge Code
 
 @ferso 
 
-npm install <br>
-npm start <br>
-npm test <br>
+yarn install <br>
+yarn start <br>
+yarn test <br>
 
