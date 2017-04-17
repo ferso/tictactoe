@@ -104,14 +104,10 @@ class App extends React.Component {
        o = new Set(o);
        m = new Set(m);
 
-      if(this.state.moves === 1 ){         
+      if(this.state.moves === 1 ){
+         //var rand = Math.floor(Math.random() * 8) + 1            
          index = this.state.boxes[4] === 'E' ? 4 : 0;
       }else{
-
-        if( this.state.boxes[4] === 'O' && this.state.boxes[5] === 'O' && this.state.boxes[3] === 'E' ){
-            index = 3;
-            return index;
-          }
           //get all winner options
           for(let i in this.winOptions){
             // current win option row
@@ -127,13 +123,13 @@ class App extends React.Component {
               
 
               if(c.length !== 0){
-                if(  b.length === 1  ){                    
+                if(  b.length === 1  ){
+                    console.log('b')
                     index = b[0] - 1;
-                    return index;
                 }
-                if(  a.length === 1  ){                    
+                if(  a.length === 1  ){
+                    console.log('a')
                     index = a[0] - 1;
-                    return index;
                 }
                 options.push(config);
               }
@@ -141,24 +137,29 @@ class App extends React.Component {
           // min max option 
           if(typeof index === 'undefined' ){ 
 
-            if( this.state.boxes[0] === 'X' && this.state.boxes[8] === 'X' && this.state.boxes[4] === 'O' && this.state.boxes[3] === 'E' ){
-              index = 3;
-              return index;
-            }
+              console.log('entra a acá')
+              if( this.state.boxes[0] === 'X' && this.state.boxes[8] === 'X' && this.state.boxes[4] === 'O' && this.state.boxes[3] === 'E' ){
+                index = 3;
+                return index;
+              }
 
-            if( this.state.boxes[2] === 'X' && this.state.boxes[6] === 'X'  && this.state.boxes[4] === 'O' && this.state.boxes[5] === 'E'  ){
-              index = 5;
-              return index;
-            }
-               
+              if( this.state.boxes[2] === 'X' && this.state.boxes[6] === 'X'  && this.state.boxes[4] === 'O' && this.state.boxes[5] === 'E'  ){
+                index = 5;
+                return index;
+              }
+              
+            
+
             for( let u in options ){
-              config = options[u];              
+              config = options[u];
+              
               if( this.state.boxes[config[0] - 1] === 'E' ){                
                  index = config[0] - 1;
                  return index;
               }else{                                
                 index = config[1] - 1;
-                return index;
+              
+                 return index;
               }
             }    
           }
