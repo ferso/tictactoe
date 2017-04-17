@@ -108,8 +108,12 @@ class App extends React.Component {
          //var rand = Math.floor(Math.random() * 8) + 1            
          index = this.state.boxes[4] === 'E' ? 4 : 0;
       }else{
+          if( this.state.boxes[6] === 'x' && this.state.boxes[8] === 'X'  && this.state.boxes[7] === 'E' ){
+              index = 7;
+              return index;
+          }
 
-         if( this.state.boxes[3] === 'O' && this.state.boxes[4] === 'O'  && this.state.boxes[5] === 'E' ){
+          if( this.state.boxes[3] === 'O' && this.state.boxes[4] === 'O'  && this.state.boxes[5] === 'E' ){
               index = 5;
               return index;
           }
