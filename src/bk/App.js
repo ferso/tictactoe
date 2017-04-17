@@ -89,7 +89,6 @@ class App extends React.Component {
     }    
   }
   findMove(){
-    
       // set option win array
       let a;
       let b;
@@ -97,72 +96,133 @@ class App extends React.Component {
       let index;
       let config;
       let options = [];
+      let sa = [];
+      let sb = [];
+      let sc = [];
 
-      let {x,o,m,e} = this.resolvePositions();
-      
-       x = new Set(x);      
-       o = new Set(o);
-       m = new Set(m);
+      // define statuses 
+      const {x,o,m,e} = this.resolvePositions();
 
-      if(this.state.moves === 1 ){         
+       let min = [];
+       let sx = new Set(x);      
+       let so = new Set(o);
+       let sm = new Set(m);
+
+      if(this.state.moves === 1 ){
+         //var rand = Math.floor(Math.random() * 8) + 1            
          index = this.state.boxes[4] === 'E' ? 4 : 0;
-      }else{
-
-        if( this.state.boxes[4] === 'O' && this.state.boxes[5] === 'O' && this.state.boxes[3] === 'E' ){
-            index = 3;
-            return index;
-          }
+      }else{          
           //get all winner options
           for(let i in this.winOptions){
             // current win option row
              config = this.winOptions[i];              
+              
               // validate player availabe options
-              a = config.filter( i =>  !x.has(i));
+              a = config.filter( i =>  !sx.has(i));
 
               // validate IA  availabe options
-              b = config.filter( i =>  !o.has(i));  
+              b = config.filter( i =>  !so.has(i)); 
 
               //validate total board
-              c = config.filter( i =>  !m.has(i));
-              
+              c = config.filter( i =>  !sm.has(i));
 
-              if(c.length !== 0){
-                if(  b.length === 1  ){                    
-                    index = b[0] - 1;
-                    return index;
-                }
-                if(  a.length === 1  ){                    
-                    index = a[0] - 1;
-                    return index;
-                }
-                options.push(config);
+              if( c.length <= ( 3 - Math.round( this.state.moves / 3 ) ) ){
+                  sc.push(c);
               }
+
+              if( a.length <= ( 3 - Math.round( this.state.moves / 3 ) ) ){
+                  sa.push(config);
+              }
+            
+              if( b.length <= ( 3 - Math.round( this.state.moves / 3 ) ) && c.length > 1 ){
+                
+                  // console.log('A:',sa)
+                  // sb.push(config);
+                  // console.log(e)
+                  index = ( Math.max(2, 3, 4, 6, 7, 8) / Math.min(2, 3, 4, 6, 7, 8) -1 )
+
+                  console.log(index)
+                  
+                  // console.log('C:',config ,c.length)
+                  
+                    // console.log('A:',x)
+                    //  a = config.filter( i =>  !sx.has(i));
+                    //  console.log( config, a.length )
+                    // console.log( config, config.indexOf(x[0]), x[0] );
+                    // console.log( config, config.indexOf(x[1]), x[1] );
+                  //  sb = config.filter( i => ! );
+                  
+
+                  // console.log('B:',config,b.length)
+                  // return index = config[0] -1;
+              }
+            
+
+              // if(c.length !== 0){
+              //   if(  b.length === 1  ){
+              //       index = b[0] - 1;
+              //       //console.log('B index', index, b);
+              //       //return index;                    
+              //   }
+              //   if( a.length === 1  ){
+
+              //       console.log( b.length )
+              //       index = a[0] - 1;
+              //       //console.log('A index', index, config,  a);
+              //       //return index;
+              //   }
+                // options.push(config);
+              }
+
+                // console.log(sc,e);
+                    // intersection
+                // let intersection = [];
+
+                // for( let i in sb){
+                //     let v = sb[i];
+                //     for(let h in sa){
+                //       let sah = new Set(sa[h]);
+                //       a = v.filter( i =>  !sah.has(i));
+                //       if( a.length < 3){
+                //         let key = v.toString();                  
+                //         if(  intersection.hasOwnProperty(key) ){
+                //             intersection[key].counter = intersection[key].counter + 1;
+                //         }else{
+                //           intersection[key] = {counter:1,v:v};
+                //         }                 
+                //       }
+                //     }                        
+                // }          
+                
+                // index = 6;
+                
+                // console.log( intersection )
           }
+          
+         
+          
           // min max option 
-          if(typeof index === 'undefined' ){ 
-
-            if( this.state.boxes[0] === 'X' && this.state.boxes[8] === 'X' && this.state.boxes[4] === 'O' && this.state.boxes[3] === 'E' ){
-              index = 3;
-              return index;
-            }
-
-            if( this.state.boxes[2] === 'X' && this.state.boxes[6] === 'X'  && this.state.boxes[4] === 'O' && this.state.boxes[5] === 'E'  ){
-              index = 5;
-              return index;
-            }
-               
-            for( let u in options ){
-              config = options[u];              
-              if( this.state.boxes[config[0] - 1] === 'E' ){                
-                 index = config[0] - 1;
-                 return index;
-              }else{                                
-                index = config[1] - 1;
-                return index;
-              }
-            }    
-          }
-      }    
+      //     if(typeof index === 'undefined' ){;
+      //       for( let u in options ){                
+      //         config = options[u];
+      //         // console.log(this.state.player, config);
+      //           let cb = config.filter( i =>  !o.has(i));              
+      //          if( cb.length === 2 ){                  
+                  
+      //               if( this.state.boxes[config[0] - 1] === 'E' ){                      
+      //                  index = config[0] -1;
+      //                  ///console.log('first',config,'->',config[0],'::',index,'->', this.state.boxes[config[0] - 1] )
+      //                  return index;
+      //               }else{                      
+      //                 index = config[2] - 1;
+      //                 //console.log('second',config,'->',index)
+      //                 return index;
+      //               }
+      //          }
+            
+      //       }    
+      //     }
+      // }    
       return index;
   }
   checkWinner(){   
