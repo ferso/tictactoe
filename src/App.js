@@ -137,7 +137,6 @@ class App extends React.Component {
               //validate total board
               c = config.filter( i =>  !m.has(i));
               
-
               if(c.length !== 0){
                 if(  b.length === 1  ){                        
                      index = b[0] - 1;
@@ -149,16 +148,13 @@ class App extends React.Component {
               }
           }
 
-
           // min max option 
           if(typeof index === 'undefined' ){ 
-
 
               if( this.state.boxes[0] === 'X' && this.state.boxes[8] === 'X' && this.state.boxes[4] === 'O' && this.state.boxes[3] === 'E' ){
                 index = 3;
                 return index;
               }
-
               if( this.state.boxes[2] === 'X' && this.state.boxes[6] === 'X'  && this.state.boxes[4] === 'O' && this.state.boxes[5] === 'E'  ){
                 index = 5;
                 return index;
@@ -170,8 +166,7 @@ class App extends React.Component {
                  index = config[0] - 1;
                  return index;
               }else{                                
-                index = config[1] - 1;
-              
+                index = config[1] - 1;              
                  return index;
               }
             }    
