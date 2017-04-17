@@ -1,96 +1,153 @@
 import React from 'react';
 import _ from 'lodash';
 
+class Message extends React.Component {
+  render(){
+    if(this.props.game){
+      return (
+        <div className="footer">
+          <div ref="warnings" className="warnings">{this.props.warnings}</div>
+          <div className="movements">Move {this.props.moves} </div>
+          <a href="#" onClick={this.props.restart} > RESTART </a>
+        </div>
+      )
+    }else{
+      return (
+        <div className="footer">
+          <div ref="warnings" className="warnings warnings-draw">{this.props.warnings} </div>
+          <div className="movements">Total movements: {this.props.moves} </div>
+          <a href="#" onClick={this.props.restart} > NEW GAME </a>
+        </div>
+      )
+    }
+  }
+}
 
 class Box extends React.Component {
   render() {
-    if(this.props.loader ){
-       if( this.props.empty === 'E'){
-          return (
-            <div className="box  box-wait"/>
-          );
-      }else{
-        return (
-            <div className="box box-wait" > 
-              <label data-id={this.props.id}  >{this.props.empty} </label>          
-            </div>
-          )
+      // we defined box style class
+      let classBox = 'box';
+      if( this.props.loader ){
+          classBox += ' box-wait'
       }
-    }else{
+       if( !this.props.game  ){    
+        classBox += ' box-off'
+       }
+      if( !this.props.game && this.props.row ){    
+          classBox += ' box-off'      
+          if( this.props.row.indexOf(this.props.id+1) > -1 ){            
+            classBox += ' box-winner'
+          }
+      }
       if( this.props.empty === 'E'){
         return (
-          <div className="box" data-id={this.props.id} onClick={this.props.onTurn} ></div>
+          <div className={classBox} data-id={this.props.id} onClick={this.props.onTurn} ></div>
         );
       }else{
         return (
-          <div className="box" > 
+          <div className={ classBox } > 
             <label data-id={this.props.id}  >{this.props.empty} </label>
           </div>
         );
       }
-    }
-  }
+    }  
 }
 
 class Board extends React.Component {
   render() {    
   var Boxes = [];
-   this.props.boxes.map((e,i) =>{
+   this.props.boxes.forEach((e,i) => {       
         Boxes.push(<Box key={i} id={i} {...this.props} empty={e} />)
     })
     return (
-      <div className="board">        
-            {Boxes}
+      <div>
+        <h2>TIC TAC TOE BOARD</h2>
+        <div className="board">
+            {Boxes}  
+        </div>
+          <Message {...this.props} />
       </div>
     );
   }
 }
 
-
 class App extends React.Component {
   constructor(props,context){
     super(props,context);
-
-    //inital state
-    this.state = {
-        loader  :false,
-        game    : true,
-        player  :'X',
-        moves   :0,
-        boxes   :Array(9).fill('E')
-    }
+    //initial state
+    this.state = this.init();
 
     //Available options for win
     this.winOptions  = [[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,9],[1,5,9],[3,5,7]];
-
-    //local
-    this.loader = false;
-    this.boxes  = this.state.boxes;
   }
- 
-  IA(){ 
+
+  init(){
+    return {
+        loader  :false,
+        game    :true,
+        row     :false,
+        player  :'X',
+        moves   :0,
+        boxes   :Array(9).fill('E'),
+        warnings:'PLAYER START',
+    }
+  }
+  componentDidMount(){
+    //this.AI();
+  }
+  componentDidUpdate(props,state){
+    if( this.state.player !== state.player && this.state.player === 'O' ){      
+      if(this.state.moves === 9 ){
+        this.setState({ warnings:'DRAW!', game:false})
+      }else{
+        this.setState({loader:true, warnings:'COMPUTER TURN'})
+        this.AI();
+      }
+    }
+  }
+  componentWillUpdate(props, state){
+     if(state.player !== this.state.player){
+      this.checkWinner();      
+    }
+  }
+  AI(){ 
     
     let x = [];
     let o = [];
     let e = [];
     let m = [];
 
-    this.boxes.map((v,i) => { if( v === 'X') { x.push(i+1) } });
-    this.boxes.map((v,i) => { if( v === 'O') { o.push(i+1) } });
-    this.boxes.map((v,i) => { if( v === 'E') { e.push(i+1) } });
-    this.boxes.map((v,i) => { if( v !== 'E') { m.push(i+1) } });
-    //var emptys = this.state.boxes.filter((v,i) => { return v === 'E' ? i : null });
+    this.state.boxes.forEach((v,i) => { if( v === 'X') { x.push(i+1) } });
+    this.state.boxes.forEach((v,i) => { if( v === 'O') { o.push(i+1) } });
+    this.state.boxes.forEach((v,i) => { if( v === 'E') { e.push(i+1) } });
+    this.state.boxes.forEach((v,i) => { if( v !== 'E') { m.push(i+1) } });
 
     //set index
     let index = this.findMove(x,m,o);
 
-    //set index occuped in board
-    this.boxes[ index ] = 'O';
-    
-    //set the turn after assing slot   
-    setTimeout(()=>{
-      this.setTurn();
-    },2000)
+    //the AI turn, set index action to board 
+    setTimeout( ()=>{
+       this.setTurn(index,'O');
+    },500)    
+  }
+  onTurn(e){
+    if(this.state.player === 'X'){
+      this.setTurn(e.target.dataset.id,'X');
+    }
+  }
+  setTurn(index,turn){
+    if(this.state.game){
+      this.state.boxes[index] = turn;
+      let boxes = this.state.boxes;
+          boxes[index] = turn;      
+      this.setState({
+        player   : this.state.player === 'O' ? 'X' : 'O',
+        moves    : this.state.moves + 1,
+        boxes    : boxes,
+        loader   : false,
+        warnings :'YOUR TURN'
+      });
+    }    
   }
   findMove(x,m,o){
       // set option win array
@@ -105,7 +162,8 @@ class App extends React.Component {
        o = new Set(o);
        m = new Set(m);
 
-      if(this.state.moves === 1 ){        
+      if(this.state.moves <= 1 ){
+         //var rand = Math.floor(Math.random() * 8) + 1            
          index = this.state.boxes[4] === 'E' ? 4 : 0;
       }else{          
           //get all winner options
@@ -129,43 +187,21 @@ class App extends React.Component {
                 options.push(config);
               }
           }
-
+          // min max option 
           if(typeof index === 'undefined' ){        
             for( let u in options ){
-              config = options[u];              
-              index = this.boxes[config[0] - 1] === 'E' ? config[0] - 1 : config[2] - 1
+              config = options[u];             
+              if( this.state.boxes[config[0] - 1] === 'E' ){
+                 return index = config[0] - 1;
+              }else{                
+                index = config[2] - 1;
+              }
             }    
           }
       }    
       return index;
   }
-  onTurn(e){    
-    this.boxes[e.target.dataset.id] =  this.state.player;    
-    this.setTurn();
-  }
-  setTurn(){ 
-    this.setState({
-      player   : this.state.player === 'O' ? 'X' : 'O',
-      moves    : this.state.moves + 1,
-      boxes    : this.boxes,
-      loader   : false,
-      warnings : ''
-    });
-    this.checkWinner(); 
-  }
-  componentDidUpdate(props,state){
-
-    this.boxes = this.state.boxes;    
-    if( this.state.player !== state.player && this.state.player === 'O' ){      
-      this.setState({loader:true, warnings:'Loading'})
-      this.IA();
-    }
-    if(this.state.moves === 9 ){
-      this.refs.warnings.innerHTML = 'Finised!';
-    }
-  }
-  checkWinner(){
-      var winConfigs  = this.winOptions;
+  checkWinner(){   
       let a;
       let b;
       let c;
@@ -176,49 +212,50 @@ class App extends React.Component {
       let e = [];
       let m = [];
 
-      this.boxes.map((v,i) => { if( v === 'X') { x.push(i+1) } });
-      this.boxes.map((v,i) => { if( v === 'O') { o.push(i+1) } });
-      this.boxes.map((v,i) => { if( v === 'E') { e.push(i+1) } });
-      this.boxes.map((v,i) => { if( v !== 'E') { m.push(i+1) } });
+      // definig current board slots
+      this.state.boxes.forEach((v,i) => { if( v === 'X') { x.push(i+1) } });
+      this.state.boxes.forEach((v,i) => { if( v === 'O') { o.push(i+1) } });
+      this.state.boxes.forEach((v,i) => { if( v === 'E') { e.push(i+1) } });
+      this.state.boxes.forEach((v,i) => { if( v !== 'E') { m.push(i+1) } });
 
-
-       x = new Set(x);      
-       o = new Set(o);
-       m = new Set(m);
-
+      // transform to object references
+      x = new Set(x);      
+      o = new Set(o);
+      m = new Set(m);
 
       for(let i in this.winOptions){
-            // current win option row
-             config = this.winOptions[i];              
-              // validate player availabe options
-             a = new Set( config.filter( i =>  !x.has(i)) );
 
-              // validate IA  availabe options
-             b = new Set( config.filter( i =>  !o.has(i)) );
+        // current win option row
+        config = this.winOptions[i];              
+        // validate player availabe options
+        a = new Set( config.filter( i =>  !x.has(i)) );
 
-              //validate total board
-             c = config.filter( i =>  !a.has(i));
-             d = config.filter( i =>  !b.has(i));
-            
-              if( c.length === 3 || d.length === 3){
-                if( c.length === 3 ){
-                  this.setState({game:false,warnings:'winner is X'})
-                }
-                if( d.length === 3){
-                  this.setState({game:false,warnings:'winner is O'})
-                }    
+        // validate IA  availabe options
+        b = new Set( config.filter( i =>  !o.has(i)) );
 
-
-                return true;             
-              }
+        //validate total board
+        c = config.filter( i =>  !a.has(i)  );
+        d = config.filter( i =>  !b.has(i) );
+        
+        //define winner
+        if( c.length === 3 || d.length === 3){
+          if( c.length === 3 ){
+            this.setState({game:false,warnings:'PLAYER WIN',row:c})
           }
-   
+          if( d.length === 3){
+            this.setState({game:false,warnings:'AI WIN!',row:d})
+          }
+          return true;
+        }
+    }   
+  }
+  restart(){    
+    this.setState(this.init())
   }
   render() {
     return (
-      <div className="app">        
-          <Board onTurn={this.onTurn.bind(this) } game={this.state.game} loader={this.state.loader} boxes={this.state.boxes} player={this.state.player} />
-          <div ref="warnings" className="warnings">{this.state.warnings}</div>
+      <div className="app">               
+          <Board restart={this.restart.bind(this)} moves={this.state.moves} row={this.state.row} warnings={this.state.warnings} onTurn={this.onTurn.bind(this) } game={this.state.game} loader={this.state.loader} boxes={this.state.boxes} player={this.state.player} />
       </div>
     );
   }

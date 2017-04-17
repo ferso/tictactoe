@@ -1,5 +1,5 @@
 * {
-  transition: all 0.5s ease; }
+  transition: all 500ms ease; }
 
 *, *:after, *:before {
   outline: none;
@@ -9,7 +9,8 @@
 
 html {
   height: 100%;
-  overflow: hidden; }
+  overflow: hidden;
+  font-family: 'Rubik', sans-serif; }
 
 body {
   -webkit-touch-callout: none;
@@ -20,36 +21,58 @@ body {
   user-select: none;
   height: 100%;
   overflow: hidden;
-  background: -webkit-linear-gradient(315deg, #55efcb 0%, #1e5799 0%, #55efcb 0%, #5bcaff 100%);
-  background: linear-gradient(315deg, #55efcb 0%, #1e5799 0%, #55efcb 0%, #5bcaff 100%); }
+  background: -webkit-linear-gradient(315deg, #55efcb 0%, #1e5799 0%, #55efcb 0%, #5bcaff 100%); }
 
 .root {
   height: 100%;
   overflow: hidden; }
 
 .app {
+  width: 600px;
   height: 100%;
-  overflow: hidden; }
+  overflow: hidden;
+  margin: auto;
+  margin-top: 10%; }
+  .app h2 {
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 4em;
+    color: #0d47a1;
+    font-family: 'Rubik', sans-serif; }
 
 .game {
   height: 100%;
   overflow: hidden; }
 
 .board {
-  width: 500px;
-  height: 500px;
-  margin: auto;
-  margin-top: 15%; }
+  width: 100%;
+  height: 600px; }
   .board:after {
     content: "";
     display: table;
     clear: both; }
 
-.warnings {
+.footer {
   width: 500px;
   margin: auto;
-  margin-top: 10px;
-  text-align: center; }
+  margin-top: 10px; }
+  .footer a {
+    text-align: center;
+    font-size: 1em !important;
+    display: block;
+    font-family: 'Rubik', sans-serif;
+    color: #d84315; }
+  .footer .warnings {
+    font-size: 40px;
+    text-align: center;
+    font-weight: 600;
+    color: #311b92; }
+    .footer .warnings-draw {
+      color: #c62828; }
+  .footer .movements {
+    font-family: 'Rubik', sans-serif;
+    text-align: center;
+    color: #424242; }
 
 .box {
   margin: 0;
@@ -57,10 +80,11 @@ body {
   float: left;
   width: 33.33%;
   height: 33.33%;
-  color: #4e342e;
+  color: #424242;
   font-size: 600%;
   line-height: 200%;
   text-align: center;
+  font-weight: 800;
   vertical-align: middle;
   cursor: pointer; }
   .box-wait {
@@ -68,6 +92,16 @@ body {
     background: none; }
     .box-wait:hover {
       background: none !important; }
+  .box-off {
+    transition: none;
+    cursor: auto;
+    color: rgba(0, 0, 0, 0.2); }
+    .box-off:hover {
+      background: none !important; }
+  .box-winner {
+    text-decoration: line-through;
+    transition: none;
+    color: red; }
   .box label {
     font-family: 'Rubik', sans-serif; }
     .box label.empty {
@@ -95,8 +129,12 @@ body {
     border-bottom: 2px solid rgba(255, 255, 255, 0.3); }
 
 @media only screen and (max-width: 800px) {
-  .board {
+  .app {
     width: 300px;
+    margin-top: 25%; }
+    .app h2 {
+      font-size: 1.8em; }
+  .board {
     height: 300px;
     font-size: 50%;
     line-height: 200%; }
