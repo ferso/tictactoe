@@ -108,6 +108,22 @@ class App extends React.Component {
          //var rand = Math.floor(Math.random() * 8) + 1            
          index = this.state.boxes[4] === 'E' ? 4 : 0;
       }else{
+
+         if( this.state.boxes[3] === 'O' && this.state.boxes[4] === 'O'  && this.state.boxes[5] === 'E' ){
+              index = 5;
+              return index;
+          }
+
+          if( this.state.boxes[5] === 'O' && this.state.boxes[4] === 'O'  && this.state.boxes[3] === 'E' ){
+            index = 3;
+            return index;
+          }
+          
+          if( this.state.boxes[0] === 'O' && this.state.boxes[6] === 'O'  && this.state.boxes[3] === 'E' ){
+            index = 3;
+            return index;
+          }
+
           //get all winner options
           for(let i in this.winOptions){
             // current win option row
@@ -123,21 +139,21 @@ class App extends React.Component {
               
 
               if(c.length !== 0){
-                if(  b.length === 1  ){
-                    console.log('b')
-                    index = b[0] - 1;
+                if(  b.length === 1  ){                        
+                     index = b[0] - 1;
                 }
-                if(  a.length === 1  ){
-                    console.log('a')
-                    index = a[0] - 1;
+                if(  a.length === 1  ){                    
+                     index = a[0] - 1;
                 }
                 options.push(config);
               }
           }
+
+
           // min max option 
           if(typeof index === 'undefined' ){ 
 
-              console.log('entra a acá')
+
               if( this.state.boxes[0] === 'X' && this.state.boxes[8] === 'X' && this.state.boxes[4] === 'O' && this.state.boxes[3] === 'E' ){
                 index = 3;
                 return index;
@@ -147,9 +163,6 @@ class App extends React.Component {
                 index = 5;
                 return index;
               }
-              
-            
-
             for( let u in options ){
               config = options[u];
               
