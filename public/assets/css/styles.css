@@ -58,7 +58,7 @@ body {
   margin-top: 10px; }
   .footer a {
     text-align: center;
-    font-size: 1em !important;
+    font-size: 1em;
     display: block;
     font-family: 'Rubik', sans-serif;
     color: #d84315; }
@@ -139,8 +139,18 @@ body {
     height: 300px;
     font-size: 50%;
     line-height: 200%; }
-  .warnings {
-    width: 300px; } }
+  .footer {
+    width: 250px;
+    margin-top: 10px; }
+    .footer a {
+      text-align: center;
+      font-size: 0.7em; }
+    .footer .warnings {
+      font-size: 20px; }
+    .footer .movements {
+      font-family: 'Rubik', sans-serif;
+      text-align: center;
+      color: #424242; } }
 
 @keyframes spinner {
   to {
